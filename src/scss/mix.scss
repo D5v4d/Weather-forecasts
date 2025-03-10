@@ -1,0 +1,43 @@
+$mainColor: rgba(70, 148, 172, 0.4);
+
+@mixin background_module($width, $height, $margin-left) {
+    position: absolute;
+    width: $width;
+    height: $height;
+    margin-left: $margin-left;
+    margin-top: 10px;
+    background-color: $mainColor;
+    border-radius: 50px 50px 50px 50px;
+}
+
+@mixin text($size, $color, $text-align){
+    font-size: $size;
+    color: $color;
+    text-align: $text-align;
+}
+@mixin input($m-top, $m-left,$p-left, $width, $block, $white, $size, $weight){
+    margin-top: $m-top;
+    margin-left: $m-left;
+    padding-left: $p-left;
+    padding-bottom: 3px;
+    width: $width;
+    border: $block;
+    outline: $block;
+    border-bottom: 1px solid $white;
+    caret-color: $white;
+    color: $white;
+    font-size: $size;
+    font-weight: $weight; 
+    background: transparent;
+    cursor: default;
+}
+@mixin button($width, $radius, $white) {
+    cursor: pointer;
+    width: $width;
+    padding-top: 4px;
+    padding-bottom: 3px;
+    border: 1px solid $white;
+    border-radius: $radius;
+    background-color: $mainColor;
+    color: $white;
+}

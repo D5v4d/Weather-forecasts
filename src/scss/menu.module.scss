@@ -1,0 +1,68 @@
+@import "./mix.scss";
+
+.Container {
+    @include background_module(340px, 930px, 10px);
+}
+
+.Input {
+    @include input(60px, 20px, 10px, 190px, none, white, 20px, bold);
+    &::placeholder {
+        color: rgb(255, 255, 255, 80%);
+        font-size: 15px;
+    }
+}
+
+
+.InputError {
+    border-bottom: 1px solid rgb(255, 0, 0);
+    &::placeholder {
+        color: rgb(255, 0, 0, 80%);
+        font-size: 15px;
+    }
+}
+
+.SearchBtn {
+    @include button(70px, 15px, white);
+    position: absolute;
+    margin-top: 65px;
+    margin-left: 25px;
+}
+
+.City {
+    @include text(50px, #ffffff, center);
+    align-content: center;
+    height: 140px;
+    margin-top: 90px;
+
+}
+
+.Img__Weather {
+    width: 200px;
+    height: 200px;
+    margin-left: 80px;
+}
+
+.Degrees {
+    @include text(40px, #ffffff, center);
+    display: block;
+}
+
+.DayText {
+    @include text(60px, #ffffff, center);
+    margin-top: 35px;
+}
+
+.GeoText {
+    display: inline-block;
+    margin-top: 65px;
+    margin-left: 15px;
+    font-size: 25px;
+    color: #ffffff;
+}
+
+.GeoBtn {
+    position: absolute;
+    @include button(70px, 15px, white);
+    margin-left: 20px;
+    margin-top: 71px;
+}
