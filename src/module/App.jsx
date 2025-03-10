@@ -13,31 +13,32 @@ import thunderstorm from "../svg/thunderstorm.svg";
 import snow from "../svg/snow.svg";
 import mist from "../svg/mist.svg";
 
+const weatherIcons = {
+  Clear: { svg: clearSky, img: require("../img/clearSky.png") },
+  Clouds: { svg: fewClouds, img: require("../img/fewClouds.jpg") },
+  Drizzle: { svg: showerRain, img: require("../img/showerRain.png") },
+  Rain: { svg: rain, img: require("../img/rain.jpg") },
+  Thunderstorm: {
+    svg: thunderstorm,
+    img: require("../img/thunderstorm.jpg"),
+  },
+  Snow: { svg: snow, img: require("../img/snow.jpg") },
+  Mist: { svg: mist, img: require("../img/mist.jpg") },
+};
+
 export default function App() {
+  const [isLoading, setIsLoading] = useState(false)
   const [forecast, setForecast] = useState("Today");
   const [value, setValue] = useState("");
   const [geo, setGeo] = useState({ lat: null, lon: null });
   const [btn, setBtn] = useState({ btnInput: false, btnGeo: false });
-  const [data, setData] = useState("");
+  const [data, setData] = useState(null);
   const [icons, setIcons] = useState("");
   const [isError, setIsError] = useState(false);
   const [styleInput, setStyleInput] = useState({ 
     className: `${styleMenu.Input}`,
     text: "Введите город", 
   });
-
-  const weatherIcons = {
-    Clear: { svg: clearSky, img: require("../img/clearSky.png") },
-    Clouds: { svg: fewClouds, img: require("../img/fewClouds.jpg") },
-    Drizzle: { svg: showerRain, img: require("../img/showerRain.png") },
-    Rain: { svg: rain, img: require("../img/rain.jpg") },
-    Thunderstorm: {
-      svg: thunderstorm,
-      img: require("../img/thunderstorm.jpg"),
-    },
-    Snow: { svg: snow, img: require("../img/snow.jpg") },
-    Mist: { svg: mist, img: require("../img/mist.jpg") },
-  };
 
   const handleInputChange = (e) => {
     setValue(e.target.value.trim());
@@ -67,14 +68,15 @@ export default function App() {
   useEffect(() => {
     const weatherApi = async () => {
       try {
+        setIsLoading(true);
         let response;
         let url;
-
+        const API_KEY = process.env.REACT_APP_OPENWEATHER_API_KEY;
         if (btn.btnGeo) {
-          url = `https://api.openweathermap.org/data/2.5/forecast?lat=${geo.lat}&lon=${geo.lon}&units=metric&appid=0dacb1150b68b0893d99f3e43f953520`;
+          url = `https://api.openweathermap.org/data/2.5/forecast?lat=${geo.lat}&lon=${geo.lon}&units=metric&appid=${API_KEY}`;
         } else {
           const query = btn.btnInput ? value : "Батуми";
-          url = `https://api.openweathermap.org/data/2.5/forecast?q=${query}&units=metric&appid=c569e6c7d04aaebc55f34219b5ee6ba6`;
+          url = `https://api.openweathermap.org/data/2.5/forecast?q=${query}&units=metric&appid=${API_KEY}`;
           if (btn.btnInput) setValue("");
         }
 
@@ -95,6 +97,8 @@ export default function App() {
       } catch (error) {
         setIsError(true);
         console.error("Произошла ошибка:", error);
+      } finally {
+        setIsLoading(false); // Конец загрузки
       }
     };
     weatherApi();
@@ -109,18 +113,14 @@ export default function App() {
     });
   }, [isError, value]);
 
-  const forecastActive = (e)=>{
-    setForecast(e.target.innerText)
-    document.querySelector(`.${styleMain.DayActive}`).classList.remove(`${styleMain.DayActive}`)
-    e.target.classList.add(`${styleMain.DayActive}`)
+  const forecastActive = (tab) => {
+    setForecast(tab);
   }
   
   return (
-    <section
-      className={styleApp.Weather}
-      style={{ backgroundImage: `url(${icons.img})` }}
-    >
-    <section className={styleMenu.Container}>
+    <section className={styleApp.Weather} style={{ backgroundImage: `url(${icons.img})` }}>
+      {isLoading && <p>Загрузка...</p>}
+      <section className={styleMenu.Container}>
         <SearchCityInput
           text={styleInput.text}
           style={styleInput.className}
@@ -134,8 +134,8 @@ export default function App() {
       </section>
       <section className={styleMain.Container}>
         <nav className={styleMain.DayNav}>
-          <TitleMain className={`${styleMain.TitleBtn} ${styleMain.DayActive}`} onButtonClick={forecastActive}text="Today" />
-          <TitleMain className={`${styleMain.TitleBtn}`} onButtonClick={forecastActive} text="Week" />
+          <TitleMain className={`${styleMain.TitleBtn} ${forecast === "Today" ? styleMain.DayActive : ""}`} onButtonClick={() => forecastActive("Today")}  text="Today"  />
+          <TitleMain className={`${styleMain.TitleBtn} ${forecast === "Week" ? styleMain.DayActive : ""}`} onButtonClick={() => forecastActive("Week")} text="Week" />
         </nav>
         <Week data={data} forecast={forecast} weatherIcons={weatherIcons} background={icons.img}/>
       </section>

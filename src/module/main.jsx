@@ -9,8 +9,9 @@ export function TitleMain({ className, onButtonClick, text }) {
 }
 
 export function Week({ data, forecast, weatherIcons, background}) {
-  
-  if (data.list && forecast) {
+
+
+  if (data && data.list && forecast) {
     let date = new Date();
       let formattedDate =
         forecast === "Today" ? date.toISOString().split("T")[0] : "12:00:00";
@@ -40,7 +41,7 @@ export function Week({ data, forecast, weatherIcons, background}) {
 }
 
 const ArrayWeather = ({ data, index, forecast, weatherIcons, background }) => {
-  if(data){}
+
   const temp = data[index].main.temp;
   const description = data[index].weather[0].main;
   const feelsLike = data[index].main.feels_like
